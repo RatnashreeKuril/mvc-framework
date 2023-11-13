@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang='en'>
+<head>
+<title>AJAX</title>
+<meta charset='utf-8'>
+<!-- Code written by Bobby starts here -->
+<script>
+var ds={
+"num" : 0
+};
+function doSomething()
+{
+var num=ds.num;
+alert("Num : "+num);
+var result=1;
+for(e=num;e>=1;e--) result=result*e;
+alert(result);
+ds.num=0;
+
+}
+function sam()
+{
+tmmvc.model=ds;
+}
+window.addEventListener('load',sam);
+</script>
+<!-- Code written by Bobby ends here -->
+
+<!-- Code written by Amit starts here -->
+<script>
+var tmmvc={
+"model" : null,
+};
+var currentVal=null;
+function loader()
+{
+var input=document.querySelector("input[tmmvc-attribute]");
+var name;
+name=input.getAttribute("tmmvc-attribute");
+if(tmmvc.model[name]==null) 
+{
+alert(name+" not found");
+}
+input.value=tmmvc.model[name];
+input.addEventListener('input',updateValue);
+
+setInterval(function(){
+isModelChanged();
+},3000);
+}
+function isModelChanged()
+{
+if(currentVal==null) return;
+var newVal=tmmvc.model["num"];
+if(currentVal!=newVal)
+{
+var input=document.querySelector("input[tmmvc-attribute]");
+input.value=newVal;
+currentVal=newVal;
+}
+}
+function updateValue()
+{
+tmmvc.model[this.getAttribute("tmmvc-attribute")]=this.value;
+currentVal=this.value;
+}
+window.addEventListener('load',loader);
+
+
+</script>
+<!-- Code written by Amit ends here -->
+
+</head>
+<body>
+<input type='number' name='num' id='num' min='1' max='10' tmmvc-attribute='num'><br><br>
+<button type='button' onclick='doSomething()'>Factorial</button>
+</body>
+</html>

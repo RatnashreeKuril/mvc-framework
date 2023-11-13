@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang='en'>
+<head>
+<title>AJAX</title>
+<meta charset='utf-8'>
+
+
+<!-- Code written by Bobby starts here -->
+<script>
+var ds={
+"address" : "288/7 Shastri Nagar, Ujjain (MP)"
+};
+function sam()
+{
+tmmvc.model=ds;
+}
+function getAddress()
+{
+var address=ds.address;
+alert("Address : "+address);
+ds.address="abcd efgh ijkl 34 ";
+}
+window.addEventListener('load',sam);
+</script>
+<!-- Code written by Bobby ends here -->
+
+<!-- Code written by Amit starts here -->
+<script>
+var tmmvc={
+"model" : null,
+};
+var textareaCollection;
+function loader()
+{
+textareaCollection=document.querySelectorAll("textarea[tmmvc-attribute]");
+var textarea
+var value;
+var tmmvcBindTo;
+for(var e=0;e<textareaCollection.length;e++)
+{
+textarea=textareaCollection[e];
+name=textarea.getAttribute("tmmvc-attribute");
+if((name in tmmvc.model)==false) 
+{
+throw name+" not found in model";
+}
+value=tmmvc.model[name];
+tmmvcBindTo=null;
+if(textarea.hasAttribute("tmmvc-bind-to"))
+{
+tmmvcBindTo=textarea.getAttribute("tmmvc-bind-to");
+if(textarea[tmmvcBindTo]==null)
+{
+throw "Invalid attribute : "+tmmvcBindTo;
+}
+}
+
+if(tmmvcBindTo==null) tmmvcBindTo="value";
+textarea[tmmvcBindTo]=value;
+textarea.addEventListener("input",updateModelForTextarea);
+textarea.tmmvcAttributeName=name;
+textarea.currentValue=value;
+textarea.tmmvcBindTo=tmmvcBindTo;
+}
+
+setInterval(function(){
+updateViewForTextarea();
+},1000);
+}
+function updateModelForTextarea()
+{
+var value;
+value=this[this.tmmvcBindTo];
+var name=this.tmmvcAttributeName;
+tmmvc.model[name]=value;
+this.currentValue=value;
+}
+function updateViewForTextarea()
+{
+var textarea;
+var name;
+var newValue;
+var currentValue;
+var bindTo;
+for(var e=0;e<textareaCollection.length;e++)
+{
+textarea=textareaCollection[e];
+name=textarea.tmmvcAttributeName;
+bindTo=textarea.tmmvcBindTo;
+newValue=tmmvc.model[name];
+currentValue=textarea.currentValue;
+if(currentValue!=newValue)
+{
+textarea[bindTo]=newValue;
+textarea.currentValue=newValue;
+} // value changed
+} // loop on textarea ends here
+
+}
+
+
+
+window.addEventListener('load',loader);
+</script>
+<!-- Code written by Amit ends here -->
+
+</head>
+<body>
+<h3>Address</h3>
+<textarea name='addr' id='addr' tmmvc-attribute='address'>
+
+</textarea>
+<br>
+<br>
+<button type='button' onclick='getAddress()'>Get address</button>
+
+</body>
+</html>

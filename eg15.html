@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang='en'>
+<head>
+<title>AJAX</title>
+<meta charset='utf-8'>
+
+
+<!-- Code written by Bobby starts here -->
+<script>
+var ds={
+"gender" : "T"
+};
+function sam()
+{
+tmmvc.model=ds;
+}
+
+function getGender()
+{
+var gender=ds.gender;
+alert("Gender : "+gender);
+ds.gender='M';
+}
+
+function getAddress()
+{
+var address=ds.address;
+alert("Address : "+address);
+ds.address="abcd efgh ijkl 34 ";
+}
+window.addEventListener('load',sam);
+</script>
+<!-- Code written by Bobby ends here -->
+
+<!-- Code written by Amit starts here -->
+<script>
+var tmmvc={
+"model" : null,
+};
+var radioButtons={};
+function loader()
+{
+var radioInputs=document.querySelectorAll("input[type='radio']");
+var radioInput;
+var name;
+var bindTo;
+for(var e=0;e<radioInputs.length;e++)
+{
+radioInput=radioInputs[e];
+if(radioInput.hasAttribute("tmmvc-attribute"))
+{
+bindTo=null;
+name=radioInput.getAttribute("tmmvc-attribute");
+if(radioButtons[name]==null) radioButtons[name]={};
+if(radioInput.hasAttribute("tmmvc-bind-to"))
+{
+bindTo=radioInput.getAttribute("tmmvc-bind-to");
+if(bindTo==null) bindTo="value";
+if(radioInput[bindTo]==null) throw "Invalid attribute : "+bindTo;
+}
+if(radioButtons[name].inputs==null) radioButtons[name].inputs=new Array();
+radioButtons[name].inputs[radioButtons[name].inputs.length]=radioInput;
+if(radioButtons[name].tmmvcAttributeName==null) radioButtons[name].tmmvcAttributeName=name;
+if(radioButtons[name].bindTo==null) radioButtons[name].bindTo=bindTo;
+if(radioInput[bindTo]==tmmvc.model[name]) 
+{
+radioInput.checked=true;
+radioButtons[name].currentValue=radioInput[bindTo];
+}
+radioInput.addEventListener("change",updateModel);
+radioInput.tmmvcAttributeName=name;
+radioInput.tmmvcBindTo=bindTo;
+}
+}
+
+setInterval(function(){
+updateView();
+},1000);
+
+}
+function updateModel()
+{
+alert(this[this.tmmvcBindTo]);
+alert(tmmvc.model[this.tmmvcAttributeName]);
+tmmvc.model[this.tmmvcAttributeName]=this[this.tmmvcBindTo];
+alert(tmmvc.model[this.tmmvcAttributeName]);
+}
+
+function updateView()
+{
+
+}
+
+window.addEventListener('load',loader);
+</script>
+<!-- Code written by Amit ends here -->
+</head>
+<body>
+<h3>Choose gender</h3>
+Gender &nbsp;&nbsp;
+<input type='radio' id='male' name='gndr' value='M' tmmvc-attribute='gender' tmmvc-bind-to='value'>Male&nbsp;&nbsp;&nbsp;
+
+<input type='radio' id='trans' name='gndr' value='T' tmmvc-attribute='gender' tmmvc-bind-to='value'>Transgender&nbsp;&nbsp;&nbsp;
+
+<input type='radio' id='nb' name='gndr' value='nb' tmmvc-attribute='gender' tmmvc-bind-to='value'>Non-binary&nbsp;&nbsp;&nbsp;
+
+
+<input type='radio' id='female' name='gndr' value='F' tmmvc-attribute='gender' tmmvc-bind-to='value'>Female<br><br>
+
+<button type='button' onclick='getGender()'>Get gender</button>
+</body>
+</html>

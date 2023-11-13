@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang='en'>
+<head>
+<title>AJAX</title>
+<meta charset='utf-8'>
+
+
+<!-- Code written by Bobby starts here -->
+<script>
+var ds={
+"car" : 2,
+"lang" : "English"
+};
+function sam()
+{
+tmmvc.model=ds;
+}
+
+function getCar()
+{
+var car=ds.car;
+alert("Car : "+car);
+ds.car=1;
+
+}
+function getLang()
+{
+var lang=ds.lang;
+alert("Language: "+lang);
+setTimeout(function(){
+ds.lang="Russian";
+},
+3000);
+}
+
+window.addEventListener('load',sam);
+</script>
+<!-- Code written by Bobby ends here -->
+
+<!-- Code written by Amit starts here -->
+<script>
+var tmmvc={
+"model" : null,
+};
+var comboBoxCollection;
+function loader()
+{
+comboBoxCollection=document.querySelectorAll("select[tmmvc-attribute]");
+var options;
+var comboBox;
+var value;
+var tmmvcBindTo;
+var optionAttribute;
+for(var e=0;e<comboBoxCollection.length;e++)
+{
+comboBox=comboBoxCollection[e];
+options=comboBox.options;
+name=comboBox.getAttribute("tmmvc-attribute");
+if((name in tmmvc.model)==false) 
+{
+throw name+" not found in model";
+}
+value=tmmvc.model[name];
+tmmvcBindTo=null;
+if(comboBox.hasAttribute("tmmvc-bind-to"))
+{
+tmmvcBindTo=comboBox.getAttribute("tmmvc-bind-to");
+if(comboBox[tmmvcBindTo]==null)
+{
+if(options[0][tmmvcBindTo]==null)
+{
+throw "Invalid attribute : "+tmmvcBindTo;
+}
+else
+{
+optionAttribute=true;
+}
+}
+else
+{
+optionAttribute=false;
+}
+}
+if(tmmvcBindTo==null) tmmvcBindTo="value";
+if(optionAttribute)
+{
+for(var e=0;e<options.length;e++)
+{
+option=options[e];
+if(option[tmmvcBindTo]==value)
+{
+option.selected=true;
+}
+}
+}
+if(!optionAttribute) comboBox[tmmvcBindTo]=value;
+comboBox.addEventListener("change",updateModelForComboBox);
+comboBox.tmmvcAttributeName=name;
+comboBox.currentValue=value;
+comboBox.tmmvcBindTo=tmmvcBindTo;
+comboBox.optionAttribute=optionAttribute;
+}
+
+setInterval(function(){
+updateViewForComboBox();
+},1000);
+}
+function updateModelForComboBox()
+{
+var value;
+if(this.optionAttribute) value=this.options[this.selectedIndex][this.tmmvcBindTo];
+else value=this[this.tmmvcBindTo];
+var name=this.tmmvcAttributeName;
+tmmvc.model[name]=value;
+this.currentValue=value;
+}
+function updateViewForComboBox()
+{
+var comboBox;
+var name;
+var newValue;
+var currentValue;
+var options;
+var bindTo;
+for(var e=0;e<comboBoxCollection.length;e++)
+{
+comboBox=comboBoxCollection[e];
+name=comboBox.tmmvcAttributeName;
+bindTo=comboBox.tmmvcBindTo;
+newValue=tmmvc.model[name];
+currentValue=comboBox.currentValue;
+if(currentValue!=newValue)
+{
+if(!(comboBox.optionAttribute))
+{
+comboBox[bindTo]=newValue;
+}
+else
+{
+options=comboBox.options;
+for(var i=0;i<options.length;i++)
+{
+option=options[i];
+if(option[bindTo]==newValue)
+{
+comboBox.selectedIndex=i;
+break;
+}
+}
+} 
+comboBox.currentValue=newValue;
+
+} // value changed
+}
+
+}
+
+
+
+window.addEventListener('load',loader);
+</script>
+<!-- Code written by Amit ends here -->
+
+</head>
+<body>
+<h3>Choose cars</h3>
+<select id='cars' name='cars' tmmvc-attribute='car' tmmvc-bind-to='selectedIndex'>
+<option value='vo'>Volvo</option>
+<option value='sa'>Saab</option>
+<option value='mer'>Mercedes</option>
+<option value='ad'>Audi</option>
+</select>
+<br>
+<br>
+<button type='button' onclick='getCar()'>Get car</button>
+
+<br>
+<br>
+<br>
+<h3>Choose language</h3>
+<select id='lang' name='lang' tmmvc-attribute='lang' tmmvc-bind-to='text'>
+<option value='hn'>Hindi</option>
+<option value='en'>English</option>
+<option value='fre'>French</option>
+<option value='ru'>Russian</option>
+<option value='am'>American</option>
+
+</select>
+<br>
+<br>
+<button type='button' onclick='getLang()'>Get language</button>
+
+
+
+</body>
+</html>

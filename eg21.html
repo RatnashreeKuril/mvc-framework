@@ -1,0 +1,39 @@
+<!DOCTYPE HTML>
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<title>Examples</title>
+<script>
+class xyz
+{
+constructor()
+{
+
+}
+ijk(e,f,g)
+{
+alert(e+f+g);
+}
+}
+
+
+
+function pqr()
+{
+var k=new xyz();
+var fn="ijk";
+var p=10;
+var q=20;
+var r=30;
+//k.ijk(p,q,r)
+var str="k."+fn+"(p,q,r)";
+alert(str);
+eval(str);
+
+}
+</script>
+</head>
+<body>
+<button type='button' onclick='pqr()'>Get sum</button>
+</body>
+</html>

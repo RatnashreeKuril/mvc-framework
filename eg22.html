@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang='en'>
+<head>
+<title>AJAX</title>
+<meta charset='utf-8'>
+<!-- Code written by Bobby starts here -->
+<script>
+class Customer
+{
+constructor()
+{
+this.id=0;
+this.name="";
+this.age=null;
+this.gender="";
+}
+}
+class CustomerManager
+{
+constructor()
+{
+this.ds=new Array();
+alert("From constructor : "+this.ds.length);
+this.mode="A";
+alert(this);
+}
+add()
+{
+alert("add got called");
+var c=new Customer();
+c.name=document.getElementById("nm").value;
+c.age=document.getElementById('age').selectedOptions[0].text;
+var male=document.getElementById("male");
+var female=document.getElementById("female");
+if(male.checked) c.gender="Male";
+else c.gender="Female";
+c.id=this.ds.length;
+this.ds.push(c);
+alert(this.ds.length);
+alert("add end");
+changeMode("V");
+}
+edit()
+{
+
+}
+delete()
+{
+
+}
+getAll()
+{
+alert(this.ds.length);
+var c;
+var listSpan=document.getElementById("list");
+var str;
+for(var e=0;e<this.ds.length;e++)
+{
+c=this.ds[e];
+str=c.name+"<br>";
+str+=c.age+"<br>";
+str+=c.gender+"<br>";
+}
+listSpan.innerHTML=str;
+}
+}
+
+function sam()
+{
+setModes([
+["A","Add"],
+["E","Edit"],
+["D","Delete"],
+["V","View"]
+]);
+var c=new CustomerManager();
+tmmvc.controller=c;
+tmmvc.model=c.ds;
+}
+window.addEventListener('load',sam);
+</script>
+<!-- Code written by Bobby ends here -->
+
+<!-- Code written by Amit starts here -->
+<script>
+var modes;
+function setModes(arr)
+{
+modes=new Map(arr);
+/*
+modes.forEach(function(value,key){
+alert("Key : "+key);
+alert("value : "+value);
+});
+*/
+}
+
+var tmmvc={
+"model" : null,
+};
+var currentVal=null;
+var views=null;
+var currentMode="null";
+var previousMode="null";
+var buttons;
+function loader()
+{
+if(tmmvc.controller.mode!=null)
+{
+tmmvc.controller.mode=tmmvc.controller.mode.trim();
+if(tmmvc.controller.mode.length>=0)
+{
+if(modes.has(tmmvc.controller.mode)==false) throw "Invalid mode has been specified in controller object";
+}
+}
+views=document.querySelectorAll("[tmmvc-if]");
+var view;
+var v;
+var str;
+var button;
+var funcName;
+
+buttons=document.querySelectorAll("button[tmmvc-click]");
+
+for(var f=0;f<buttons.length;f++)
+{
+button=buttons[f];
+alert(button);
+funcName=button.getAttribute("tmmvc-click");
+button.funcName=funcName;
+button.onclick=function(){
+var fnName=this.funcName;
+var str="tmmvc.controller."+fnName+"()";
+alert(str);
+return eval(str);
+};
+} // for loop for buttons
+
+
+for(var e=0;e<views.length;e++)
+{
+view=views[e];
+v=view.getAttribute("tmmvc-if");
+str="tmmvc.controller."+v;
+if(eval(str)==false)
+{
+view.remove();
+}
+} // for loop for views
+}
+function changeMode(mode)
+{
+previousMode=tmmvc.controller.mode;
+tmmvc.controller.mode=mode;
+updateMode();
+}
+function updateMode()
+{
+var view;
+var mode;
+var str;
+var strForPreviousMode;
+var sp;
+var ep;
+var x;
+for(var e=0;e<views.length;e++)
+{
+view=views[e];
+mode=view.getAttribute("tmmvc-if");
+str="tmmvc.controller."+mode;
+if(eval(str))
+{
+document.body.append(view);
+}
+else
+{
+alert("Previous Mode : "+previousMode);
+sp=mode.indexOf("'");
+ep=mode.lastIndexOf("'");
+x=mode.substring(sp+1,ep);
+if(x==previousMode)
+{
+view.remove();
+}
+}
+}
+}
+window.addEventListener('load',loader);
+</script>
+<!-- Code written by Amit ends here -->
+</head>
+<body>
+
+<div tmmvc-if="mode=='A'">
+Name <input type='text' name='nm' id='nm'><br>
+Age <select id='age'>
+<option value='1'>20</option>
+<option value='2'>30</option>
+<option value='3'>40</option>
+<option value='4'>50</option>
+</select><br>
+Gender <input type='radio' name='gender' id='male' value='M'>Male &nbsp;&nbsp;&nbsp
+<input type='radio' id='female' name='gender' value='F'>Female
+<br>
+<br>
+<button type='button' tmmvc-click='add'>Add</button>
+</div>
+
+
+<div tmmvc-if="mode=='E'">
+Name <input type='text' name='nm' id='nm'><br>
+Age <select>
+<option value='1'>20</option>
+<option value='2'>30</option>
+<option value='3'>40</option>
+<option value='4'>50</option>
+</select><br>
+Gender <input type='radio' id='male' value='M'>Male &nbsp;&nbsp;&nbsp
+<input type='radio' id='female' value='F'>Female
+<br>
+<br>
+<button type='button' onclick='edit()'>Update</button>
+</div>
+
+<div tmmvc-if="mode=='D'">
+Name : Ratna<br>
+Age : 23<br>
+Gender : Female
+<br>
+<br>
+<button type='button' onclick='delete()'>Delete</button>
+</div>
+
+<div tmmvc-if="mode=='V'">
+<h3>Custromer list</h3>
+<span id='list'>
+
+</span>
+<button type='button' tmmvc-click='getAll'>Get all</button>
+</div>
+
+
+</body>
+</html>

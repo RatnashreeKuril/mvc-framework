@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang='en'>
+<head>
+<title>AJAX</title>
+<meta charset='utf-8'>
+
+
+<!-- Code written by Bobby starts here -->
+<script>
+var ds={
+"car" : "Mercedes",
+"subjects" : null
+};
+function sam()
+{
+tmmvc.model=ds;
+}
+function getCar()
+{
+var car=ds.car;
+alert("Car : "+car);
+for(var e=0;e<9;e++);
+ds.car="Mercedes";
+}
+function getSubjects()
+{
+var subjects=ds.subjects;
+for(var e=0;e<subjects.length;e++)
+{
+alert("Subjects: "+subjects[e]);
+}
+for(var e=0;e<9;e++);
+ds.subjects=['hindi','math'];
+}
+
+
+window.addEventListener('load',sam);
+</script>
+<!-- Code written by Bobby ends here -->
+
+<!-- Code written by Amit starts here -->
+<script>
+var tmmvc={
+"model" : null
+};
+var comboBoxCollection=null;
+function loader()
+{
+comboBoxCollection=document.querySelectorAll("select[tmmvc-attribute]");
+var options;
+var comboBox;
+var values;
+var value;
+var bindTo;
+for(var e=0;e<comboBoxCollection.length;e++)
+{
+comboBox=comboBoxCollection[e];
+options=comboBox.children;
+name=comboBox.getAttribute("tmmvc-attribute");
+if(!(name in tmmvc.model)) throw name+" not found in model";
+values=tmmvc.model[name];
+bindTo=null;
+if(comboBox.hasAttribute("tmmvc-bind-to"))
+{
+bindTo=comboBox.getAttribute("tmmvc-bind-to");
+if(!(bindTo in comboBox))
+{
+if(!(bindTo in options[0]))
+{
+throw "Invalid attribute : "+bindTo;
+}
+}
+}
+
+if(bindTo==null) bindTo="text";
+optionAttribute=false;
+if(bindTo in options[0]) optionAttribute=true;
+//alert("Option attribute : "+optionAttribute);
+if(values!=null)
+{
+if(optionAttribute)
+{
+if(Array.isArray(values)==false)
+{
+for(var f=0;f<options.length;f++)
+{
+option=options[f];
+if(option[bindTo]==values)
+{
+option.selected=true;
+}
+}
+} // if for values!=array
+else
+{
+for(var i=0;i<values.length;i++)
+{
+value=values[i];
+for(var f=0;f<options.length;f++)
+{
+option=options[f];
+if(option[bindTo]==value)
+{
+option.selected=true;
+}
+}
+}
+} // else block for values=array
+
+} // option attribute
+if(!optionAttribute) comboBox[bindTo]=value;
+} // if values !=null
+
+comboBox.addEventListener("change",updateModelForComboBox);
+comboBox.tmmvcAttributeName=name;
+comboBox.currentValues=values;
+comboBox.tmmvcBindTo=bindTo;
+comboBox.optionAttribute=optionAttribute;
+}
+
+
+setInterval(function(){
+updateViewForComboBox();
+},1000);
+
+
+
+}
+
+function updateModelForComboBox()
+{
+var values=[];
+if(!(this.optionAttribute)) values=this[this.tmmvcBindTo];
+else
+{
+var selectedOptions=this.selectedOptions;
+for(var e=0;e<selectedOptions.length;e++)
+{
+values[values.length]=selectedOptions[e][this.tmmvcBindTo];
+}
+}
+tmmvc.model[this.tmmvcAttributeName]=values;
+this.currentValues=values;
+}
+function updateViewForComboBox()
+{
+var comboBox;
+var newValues;
+var name;
+var newValue;
+var currentValues;
+var options;
+var option;
+var valuesChanged;
+for(var e=0;e<comboBoxCollection.length;e++)
+{
+valuesChanged=false;
+comboBox=comboBoxCollection[e];
+name=comboBox.tmmvcAttributeName;
+currentValues=comboBox.currentValues;
+newValues=tmmvc.model[name];
+//alert("Values from view : "+currentValues);
+//alert("Values from model : "+newValues);
+if(!(comboBox.optionAttribute))
+{
+if(currentValues!=newValues) valuesChanged=true;
+}
+else
+{
+//alert("Values from view : "+currentValues);
+//alert("Values from model : "+newValues);
+//alert(currentValues==newValues);
+if(currentValues==newValues) valuesChanged=false;
+if(currentValues==null || newValues==null) valuesChanged=true;
+else if(currentValues.length!=newValues.length) valuesChanged=true;
+else
+{
+for(var i=0;i<newValues.length;i++)
+{
+newValue=newValues[i];
+//alert("New value : "+newValue);
+//alert("Current values : "+currentValues)
+if(currentValues.includes(newValue)==false)
+{
+valuesChanged=true;
+break;
+}
+}
+}
+}
+
+
+if(valuesChanged)
+{
+bindTo=comboBox.tmmvcBindTo;
+if(!(comboBox.optionAttribute))
+{
+comboBox[bindTo]=newValues;
+}
+else
+{
+options=comboBox.options;
+comboBox.selectedOptions=[];
+for(var i=0;i<options.length;i++)
+{
+option=options[i];
+value=option[bindTo];
+option.selected=false;
+if(newValues!=null) if(newValues.includes(value))
+{
+option.selected=true;
+comboBox.selectedOptions[comboBox.selectedOptions.length]=option;
+}
+}
+}
+comboBox.currentValues=newValues;
+
+
+} // values changed
+}
+}
+
+
+
+window.addEventListener('load',loader);
+</script>
+<!-- Code written by Amit ends here -->
+
+
+
+
+</head>
+<body>
+<h3>Choose car</h3>
+<select id='car' name='car' tmmvc-attribute='car' tmmvc-bind-to='text'>
+<option value='vo'>Volvo</option>
+<option value='sb'>Saab</option>
+<option value='mer'>Mercedes</option>
+<option value='ad'>Audi</option>
+</select>
+<br><br>
+<button type='button' onclick='getCar()'>Get car</button>
+<br>
+<br>
+<br>
+<h3>Choose subject</h3>
+<select id='subjects' name='subjects' multiple tmmvc-attribute='subjects' tmmvc-bind-to='value'>
+<option value='hindi'>Hindi</option>
+<option value='english'>English</option>
+<option value='math'>Math</option>
+<option value='physics'>Physics</option>
+<option value='chemistry'>Chemistry</option>
+</select>
+<br><br>
+<button type='button' onclick='getSubjects()'>Get subjects</button>
+</body>
+</html>

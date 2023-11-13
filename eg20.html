@@ -1,0 +1,25 @@
+<!DOCTYPE HTML>
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<title>Examples</title>
+<script>
+function abcd(x,y)
+{
+alert(x+y);
+}
+function pqr()
+{
+var fn="abcd";
+var e=100;
+var f=20;
+var str=fn+"(e,f)";
+//alert(str);
+eval(str);
+}
+</script>
+</head>
+<body>
+<button type='button' onclick='pqr()'>Get sum</button>
+</body>
+</html>

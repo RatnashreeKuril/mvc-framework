@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang='en'>
+<head>
+<title>AJAX</title>
+<meta charset='utf-8'>
+<!-- Code written by Bobby starts here -->
+<script>
+var ds={
+"num1" : null,
+"num2" : 0,
+"num3" : 0,
+"num4" : 0,
+"ci" : 0,
+"gender" : "T",
+"city" : "Ujjain",
+"state" : "MP",
+"country" : "In",
+"isIndian" : null,
+"car" : null,
+"subjects" : null,
+"address" : null,
+
+"firstName" : "",
+"lastName" : "",
+"age" : "",
+"month" : "",
+"course" : [
+["c","webapps"],
+["C++","Learn"],
+["Java","Program"],
+["Javascript","Opps"]
+],
+"info" : {
+"name" : "teena",
+"gender" : "female",
+"age" : 26
+}
+};
+function doSomething()
+{
+var num1=ds.num1;
+alert("Num 1 : "+num1);
+
+var num2=ds.num2;
+alert("Num 2 : "+num2);
+
+var num3=ds.num3;
+alert("Num 3 : "+num3);
+
+var num4=ds.num4;
+alert("Num 4 : "+num4);
+
+var position=ds.ci;
+alert("Position : "+position);
+/*
+var result=1;
+for(var e=num;e>=1;e--) result=result*e;
+alert(result);
+*/
+ds.num1=0;
+ds.num2=453;
+ds.num3=-1;
+ds.num4=-126;
+
+
+}
+
+function changeTemplate()
+{
+ds.age=23;
+ds.firstName="Rat";
+ds.lastName="Sharma";
+ds.course[0][1]="AngularJS";
+ds.info.name="Tom";
+ds.info.gender="Male";
+ds.info.age=40;
+}
+
+function getGender()
+{
+var gender=ds.gender;
+alert("Gender : "+gender);
+ds.gender='M';
+}
+function getCity()
+{
+var city=ds.city;
+alert("City : "+city);
+ds.city='Bhopal';
+}
+
+function getState()
+{
+var state=ds.state;
+alert("State: "+state);
+ds.state='UP';
+}
+
+function getCountry()
+{
+var country=ds.country;
+alert("Country: "+country);
+ds.country='US';
+}
+
+function getIsIndian()
+{
+var isIndian=ds.isIndian;
+alert("Is Indian : "+isIndian);
+ds.isIndian=true;
+}
+
+function getCar()
+{
+var car=ds.car;
+alert("Car : "+car);
+ds.car=3;
+}
+
+function getSubjects()
+{
+var subjects=ds.subjects;
+for(var e=0;e<subjects.length;e++)
+{
+alert("Subjects: "+subjects[e]);
+}
+for(var e=0;e<9;e++);
+ds.subjects=['hindi','english'];
+}
+function getAddress()
+{
+var address=ds.address;
+alert("Address : "+address);
+ds.address="abcd efgh ijkl 34 ";
+}
+
+function sam()
+{
+tmmvc.model=ds;
+}
+window.addEventListener('load',sam);
+</script>
+<!-- Code written by Bobby ends here -->
+
+<!-- Code written by Amit starts here -->
+<script src='js/mvc.js'>
+</script>
+<!-- Code written by Amit ends here -->
+
+</head>
+<body>
+<input type='number' name='num1' id='num1' min='1' max='10' tmmvc-attribute='num1' tmmvc-bind-to='value'>{{num1}}<br><br> 
+<input type='number' name='num2' id='num2' min='1' max='10' tmmvc-attribute='num2'>{{num2}}<br><br>
+<input type='number' name='num3' id='num3' min='1' max='10' tmmvc-attribute='num3'>{{num3}}<br><br>
+<input type='number' name='num4' id='num4' min='1' max='10' tmmvc-attribute='num4'>{{num4}}<br><br>
+<input type='text' name='nm' id='nm' min='1' max='10' tmmvc-attribute='ci' tmmvc-bind-to='selectionStart'>{{ci}}<br><br>
+<button type='button' onclick='doSomething()'>Factorial</button>
+<br>
+<br>
+Gender &nbsp;&nbsp;
+<input type='radio' id='male' name='gndr' value='M' tmmvc-attribute='gender' tmmvc-bind-to='value'>Male&nbsp;&nbsp;&nbsp;
+
+<input type='radio' id='trans' name='gndr' value='T' tmmvc-attribute='gender' tmmvc-bind-to='value'>Transgender&nbsp;&nbsp;&nbsp;
+
+<input type='radio' id='nb' name='gndr' value='nb' tmmvc-attribute='gender' tmmvc-bind-to='value'>Non-binary&nbsp;&nbsp;&nbsp;
+
+
+<input type='radio' id='female' name='gndr' value='F' tmmvc-attribute='gender' tmmvc-bind-to='value'>Female {{gender}}<br><br>
+
+<button type='button' onclick='getGender()'>Get gender</button>
+<br>
+<br>
+<br>
+
+City &nbsp;&nbsp;
+<input type='radio' id='Ujjain' name='city' value='Ujjain' tmmvc-attribute='city' tmmvc-bind-to='value'>Ujjain&nbsp;&nbsp;&nbsp;
+
+<input type='radio' id='Dewas' name='city' value='Dewas' tmmvc-attribute='city' tmmvc-bind-to='value'>Dewas&nbsp;&nbsp;&nbsp;
+
+<input type='radio' id='Bhopal' name='city' value='Bhopal' tmmvc-attribute='city' tmmvc-bind-to='value'>Bhopal&nbsp;&nbsp;&nbsp;
+
+
+<input type='radio' id='Indore' name='city' value='Indore' tmmvc-attribute='city' tmmvc-bind-to='value'>Indore {{city}}<br><br>
+
+<button type='button' onclick='getCity()'>Get city</button>
+<br>
+<br>
+<br>
+
+State &nbsp;&nbsp;
+<input type='radio' id='MP' name='state' value='MP' tmmvc-attribute='state' tmmvc-bind-to='value'>MP&nbsp;&nbsp;&nbsp;
+
+<input type='radio' id='UP' name='state' value='UP' tmmvc-attribute='state' tmmvc-bind-to='value'>UP&nbsp;&nbsp;&nbsp;
+
+<input type='radio' id='Odisa' name='state' value='Odisa' tmmvc-attribute='state' tmmvc-bind-to='value'>Odisa&nbsp;&nbsp;&nbsp;
+
+
+<input type='radio' id='MH' name='state' value='MH' tmmvc-attribute='state' tmmvc-bind-to='value'>Maharashtra  {{state}}<br><br>
+
+<button type='button' onclick='getState()'>Get state</button>
+<br>
+<br>
+<br>
+
+Country&nbsp;&nbsp;
+<input type='radio' id='In' name='country' value='In' tmmvc-attribute='country' tmmvc-bind-to='value'>India&nbsp;&nbsp;&nbsp;
+
+
+<input type='radio' id='US' name='country' value='US' tmmvc-attribute='country' tmmvc-bind-to='value'>USA&nbsp;&nbsp;&nbsp;
+
+
+<input type='radio' id='UK' name='country' value='UK' tmmvc-attribute='country' tmmvc-bind-to='value'>UK  {{country}}<br><br>
+
+<button type='button' onclick='getCountry()'>Get country</button>
+<br>
+<br>
+<br>
+Is Indian <input type='checkbox' id='isIndian' name='isIndian' tmmvc-attribute='isIndian'><br><br>
+<button type='button' onclick='getIsIndian()'>Get is Indian</button>
+<br>
+<br>
+<br>
+<select id='cars' name='cars' tmmvc-attribute='car' tmmvc-bind-to='selectedIndex'>
+<option value='volvo'>Volvo</option>
+<option value='saab'>Saab</option>
+<option value='mercedes'>Mercedes</option>
+<option value='audi'>Audi</option>
+</select>  {{car}}
+<br>
+<br>
+<button type='button' onclick='getCar()'>Get car</button>
+<br>
+<br>
+<br>
+<h3>Choose subject</h3>
+<select id='subjects' name='subjects' multiple tmmvc-attribute='subjects' tmmvc-bind-to='value'>
+<option value='hindi'>Hindi</option>
+<option value='english'>English</option>
+<option value='math'>Math</option>
+<option value='physics'>Physics</option>
+<option value='chemistry'>Chemistry</option>
+</select>    {{subjects}}
+<br><br>
+<button type='button' onclick='getSubjects()'>Get subjects</button>
+<br>
+<br>
+<br>
+<h3>Address</h3>
+<textarea name='addr' id='addr' tmmvc-attribute='address'>
+
+</textarea>    {{address}}
+<br>
+<br>
+<button type='button' onclick='getAddress()'>Get address</button>
+
+<h1>Hello {{firstName}}</h1>
+How are you {{lastName}}<br>
+Name <input type='text' name='firstName' id='firstName' value={{firstName}}><br>
+Surname <input type='text' name='lastName' id='lastName' value={{lastName}}><br>
+Age <input type='number' name='age' id='age' max='100' min='0' value={{age}}><br>
+<h3>Select Course</h3>
+<select>
+<option>{{course[0][1]}}</option>
+<option>{{course[1][0]}}</option>
+<option>{{course[2][1]}}</option>
+<option>{{course[3][0]}}</option>
+</select><br><br>
+<h3></h3>
+<span>
+<b>Name : </b>{{info.name}}<br>
+<b>Surname : </b>{{info.gender}}{{}}<br>
+<b>Age : </b>{{info.age}}<br>
+</span>
+<button type='button' onclick='changeTemplate()'>Get</button>
+
+</body>
+</html>

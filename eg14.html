@@ -1,0 +1,639 @@
+<!doctype html>
+<html lang='en'>
+<head>
+<title>AJAX</title>
+<meta charset='utf-8'>
+<!-- Code written by Bobby starts here -->
+<script>
+var ds={
+"num1" : null,
+"num2" : 0,
+"num3" : 0,
+"num4" : 0,
+"ci" : 0,
+"gender" : "T",
+"city" : "Ujjain",
+"state" : "MP",
+"country" : "In",
+"isIndian" : null,
+"car" : null,
+"subjects" : null,
+"address" : null
+};
+function doSomething()
+{
+var num1=ds.num1;
+alert("Num 1 : "+num1);
+
+var num2=ds.num2;
+alert("Num 2 : "+num2);
+
+var num3=ds.num3;
+alert("Num 3 : "+num3);
+
+var num4=ds.num4;
+alert("Num 4 : "+num4);
+
+var position=ds.ci;
+alert("Position : "+position);
+/*
+var result=1;
+for(var e=num;e>=1;e--) result=result*e;
+alert(result);
+*/
+ds.num1=0;
+ds.num2=453;
+ds.num3=-1;
+ds.num4=-126;
+}
+function sam()
+{
+tmmvc.model=ds;
+}
+
+function getGender()
+{
+var gender=ds.gender;
+alert("Gender : "+gender);
+ds.gender='M';
+}
+function getCity()
+{
+var city=ds.city;
+alert("City : "+city);
+ds.city='Bhopal';
+}
+
+function getState()
+{
+var state=ds.state;
+alert("State: "+state);
+ds.state='UP';
+}
+
+function getCountry()
+{
+var country=ds.country;
+alert("Country: "+country);
+ds.country='US';
+}
+
+function getIsIndian()
+{
+var isIndian=ds.isIndian;
+alert("Is Indian : "+isIndian);
+ds.isIndian=true;
+}
+
+function getCar()
+{
+var car=ds.car;
+alert("Car : "+car);
+ds.car=3;
+}
+
+function getSubjects()
+{
+var subjects=ds.subjects;
+for(var e=0;e<subjects.length;e++)
+{
+alert("Subjects: "+subjects[e]);
+}
+for(var e=0;e<9;e++);
+ds.subjects=['hindi','english'];
+}
+function getAddress()
+{
+var address=ds.address;
+alert("Address : "+address);
+ds.address="abcd efgh ijkl 34 ";
+}
+window.addEventListener('load',sam);
+</script>
+<!-- Code written by Bobby ends here -->
+
+<!-- Code written by Amit starts here -->
+<script>
+var tmmvc={
+"model" : null,
+};
+
+var inputs=null;
+var radioButtons={};
+var comboBoxCollection;
+var textareaCollection;
+function loader()
+{
+inputs=document.querySelectorAll("input[tmmvc-attribute]");
+var name;
+var bindTo;
+var input;
+var inputType;
+for(var e=0;e<inputs.length;e++)
+{
+input=inputs[e];
+name=input.getAttribute("tmmvc-attribute");
+if(!(name in tmmvc.model)) 
+{
+throw name+" not found in model";
+}
+if(input.hasAttribute("tmmvc-bind-to"))
+{
+bindTo=input.getAttribute("tmmvc-bind-to");
+if(bindTo==null)
+{
+bindTo="value";
+}
+if(!(bindTo in input)) throw "Invalid attribute : "+bindTo;
+} // if condition for bind to attribute
+
+inputType=input.type.toUpperCase();
+if(inputType=='RADIO')
+{
+bindTo=null;
+if(input.hasAttribute("tmmvc-bind-to"))
+{
+bindTo=input.getAttribute("tmmvc-bind-to");
+if(input[bindTo]==null) throw "Invalid attribute : "+bindTo;
+} // if condition for bind to attribute
+if(bindTo==null)
+{
+bindTo="value";
+}
+if(radioButtons[name]==null) radioButtons[name]={};
+if(radioButtons[name].inputs==null) radioButtons[name].inputs=new Array();
+radioButtons[name].inputs[radioButtons[name].inputs.length]=input;
+if(radioButtons[name].tmmvcAttributeName==null) radioButtons[name].tmmvcAttributeName=name;
+if(radioButtons[name].bindTo==null) radioButtons[name].bindTo=bindTo;
+
+if(input[bindTo]==tmmvc.model[name]) 
+{
+input.checked=true;
+radioButtons[name].currentValue=input[bindTo];
+}
+input.addEventListener("change",updateModelForRadioInput);
+input.tmmvcAttributeName=name;
+input.tmmvcBindTo=bindTo;
+
+
+} // if condition for radio input
+else if(inputType=='CHECKBOX')
+{
+bindTo=null;
+if(input.hasAttribute("tmmvc-bind-to"))
+{
+bindTo=input.getAttribute("tmmvc-bind-to");
+if(input[bindTo]==null) throw "Invalid attribute : "+bindTo;
+} // if condition for bind to attribute
+if(bindTo==null)
+{
+bindTo="checked";
+}
+input[bindTo]=tmmvc.model[name];
+
+input.tmmvcBindTo=bindTo;
+input.addEventListener('input',updateModel);
+input.currentVal=tmmvc.model[name];
+input.tmmvcAttributeName=name;
+}
+else 
+{
+bindTo=null;
+if(input.hasAttribute("tmmvc-bind-to"))
+{
+bindTo=input.getAttribute("tmmvc-bind-to");
+if(input[bindTo]==null) throw "Invalid attribute : "+bindTo;
+} // if condition for bind to attribute
+if(bindTo==null)
+{
+bindTo="value";
+}
+
+input[bindTo]=tmmvc.model[name];
+input.tmmvcBindTo=bindTo;
+input.addEventListener('input',updateModel);
+input.currentVal=tmmvc.model[name];
+input.tmmvcAttributeName=name;
+} 
+}
+
+// code for combo box 
+
+comboBoxCollection=document.querySelectorAll("select[tmmvc-attribute]");
+var options;
+var comboBox;
+var values;
+var value;
+var bindTo;
+for(var e=0;e<comboBoxCollection.length;e++)
+{
+comboBox=comboBoxCollection[e];
+options=comboBox.children;
+name=comboBox.getAttribute("tmmvc-attribute");
+if(!(name in tmmvc.model)) throw name+" not found in model";
+values=tmmvc.model[name];
+bindTo=null;
+if(comboBox.hasAttribute("tmmvc-bind-to"))
+{
+bindTo=comboBox.getAttribute("tmmvc-bind-to");
+if(!(bindTo in comboBox))
+{
+if(!(bindTo in options[0]))
+{
+throw "Invalid attribute : "+bindTo;
+}
+}
+}
+
+if(bindTo==null) bindTo="text";
+optionAttribute=false;
+if(bindTo in options[0]) optionAttribute=true;
+//alert("Option attribute : "+optionAttribute);
+if(values!=null)
+{
+if(optionAttribute)
+{
+if(Array.isArray(values)==false)
+{
+for(var f=0;f<options.length;f++)
+{
+option=options[f];
+if(option[bindTo]==values)
+{
+option.selected=true;
+}
+}
+} // if for values!=array
+else
+{
+for(var i=0;i<values.length;i++)
+{
+value=values[i];
+for(var f=0;f<options.length;f++)
+{
+option=options[f];
+if(option[bindTo]==value)
+{
+option.selected=true;
+}
+}
+}
+} // else block for values=array
+
+} // option attribute
+if(!optionAttribute) comboBox[bindTo]=value;
+} // if values !=null
+
+comboBox.addEventListener("change",updateModelForComboBox);
+comboBox.tmmvcAttributeName=name;
+comboBox.currentValues=values;
+comboBox.tmmvcBindTo=bindTo;
+comboBox.optionAttribute=optionAttribute;
+}
+
+// code for combo box 
+
+// code for textarea
+
+textareaCollection=document.querySelectorAll("textarea[tmmvc-attribute]");
+var textarea
+var value;
+var tmmvcBindTo;
+for(var e=0;e<textareaCollection.length;e++)
+{
+textarea=textareaCollection[e];
+name=textarea.getAttribute("tmmvc-attribute");
+if((name in tmmvc.model)==false) 
+{
+throw name+" not found in model";
+}
+value=tmmvc.model[name];
+tmmvcBindTo=null;
+if(textarea.hasAttribute("tmmvc-bind-to"))
+{
+tmmvcBindTo=textarea.getAttribute("tmmvc-bind-to");
+if(textarea[tmmvcBindTo]==null)
+{
+throw "Invalid attribute : "+tmmvcBindTo;
+}
+}
+
+if(tmmvcBindTo==null) tmmvcBindTo="value";
+textarea[tmmvcBindTo]=value;
+textarea.addEventListener("input",updateModelForTextarea);
+textarea.tmmvcAttributeName=name;
+textarea.currentValue=value;
+textarea.tmmvcBindTo=tmmvcBindTo;
+}
+
+
+// code for textarea
+
+setInterval(function(){
+updateView();
+updateViewForRadioInput();
+updateViewForComboBox();
+updateViewForTextarea();
+},1000);
+
+
+}
+
+function updateView()
+{
+var input;
+for(var e=0;e<inputs.length;e++)
+{
+input=inputs[e];
+if(input.type.toUpperCase()=="RADIO") continue;
+var newVal=tmmvc.model[input.tmmvcAttributeName];
+if(input.currentVal!=newVal)
+{
+input[input.tmmvcBindTo]=newVal;
+input.currentVal=newVal;
+}
+}
+}
+
+function updateModel()
+{
+tmmvc.model[this.tmmvcAttributeName]=this[this.tmmvcBindTo];
+this.currentVal=this[this.tmmvcBindTo];
+}
+function updateModelForComboBox()
+{
+var values=[];
+if(!(this.optionAttribute)) values=this[this.tmmvcBindTo];
+else
+{
+var selectedOptions=this.selectedOptions;
+for(var e=0;e<selectedOptions.length;e++)
+{
+values[values.length]=selectedOptions[e][this.tmmvcBindTo];
+}
+}
+tmmvc.model[this.tmmvcAttributeName]=values;
+this.currentValues=values;
+}
+function updateModelForTextarea()
+{
+var value;
+value=this[this.tmmvcBindTo];
+var name=this.tmmvcAttributeName;
+tmmvc.model[name]=value;
+this.currentValue=value;
+}
+function updateViewForRadioInput()
+{
+var radioButton;
+var name;
+var newValue;
+var currentValue;
+var inputs;
+var input;
+for(k in radioButtons)
+{
+radioButton=radioButtons[k];
+name=radioButton.tmmvcAttributeName;
+currentValue=radioButton.currentValue;
+newValue=tmmvc.model[name];
+if(currentValue!=newValue)
+{
+// updateView
+inputs=radioButton.inputs;
+for(var e=0;e<inputs.length;e++)
+{
+input=inputs[e];
+input.checked=false;
+if(input[input.tmmvcBindTo]==newValue) input.checked=true;
+}
+currentValue=newValue;
+}
+}
+
+
+}
+
+function updateModelForRadioInput()
+{
+// update model
+var name=this.tmmvcAttributeName;
+tmmvc.model[name]=this[this.tmmvcBindTo];
+radioButtons[name].currentValue=this[this.tmmvcBindTo];
+}
+function updateViewForComboBox()
+{
+var comboBox;
+var newValues;
+var name;
+var newValue;
+var currentValues;
+var options;
+var option;
+var valuesChanged;
+for(var e=0;e<comboBoxCollection.length;e++)
+{
+valuesChanged=false;
+comboBox=comboBoxCollection[e];
+name=comboBox.tmmvcAttributeName;
+currentValues=comboBox.currentValues;
+newValues=tmmvc.model[name];
+//alert("Values from view : "+currentValues);
+//alert("Values from model : "+newValues);
+if(!(comboBox.optionAttribute))
+{
+if(currentValues!=newValues) valuesChanged=true;
+}
+else
+{
+//alert("Values from view : "+currentValues);
+//alert("Values from model : "+newValues);
+//alert(currentValues==newValues);
+if(currentValues==newValues) valuesChanged=false;
+if(currentValues==null || newValues==null) valuesChanged=true;
+else if(currentValues.length!=newValues.length) valuesChanged=true;
+else
+{
+for(var i=0;i<newValues.length;i++)
+{
+newValue=newValues[i];
+//alert("New value : "+newValue);
+//alert("Current values : "+currentValues)
+if(currentValues.includes(newValue)==false)
+{
+valuesChanged=true;
+break;
+}
+}
+}
+}
+
+
+if(valuesChanged)
+{
+bindTo=comboBox.tmmvcBindTo;
+if(!(comboBox.optionAttribute))
+{
+comboBox[bindTo]=newValues;
+}
+else
+{
+options=comboBox.options;
+comboBox.selectedOptions=[];
+for(var i=0;i<options.length;i++)
+{
+option=options[i];
+value=option[bindTo];
+option.selected=false;
+if(newValues!=null) if(newValues.includes(value))
+{
+option.selected=true;
+comboBox.selectedOptions[comboBox.selectedOptions.length]=option;
+}
+}
+}
+comboBox.currentValues=newValues;
+
+
+} // values changed
+}
+}
+function updateViewForTextarea()
+{
+var textarea;
+var name;
+var newValue;
+var currentValue;
+var bindTo;
+for(var e=0;e<textareaCollection.length;e++)
+{
+textarea=textareaCollection[e];
+name=textarea.tmmvcAttributeName;
+bindTo=textarea.tmmvcBindTo;
+newValue=tmmvc.model[name];
+currentValue=textarea.currentValue;
+if(currentValue!=newValue)
+{
+textarea[bindTo]=newValue;
+textarea.currentValue=newValue;
+} // value changed
+} // loop on textarea ends here
+
+}
+
+
+window.addEventListener('load',loader);
+
+</script>
+<!-- Code written by Amit ends here -->
+
+</head>
+<body>
+<input type='number' name='num1' id='num1' min='1' max='10' tmmvc-attribute='num1' tmmvc-bind-to='value'><br><br>
+<input type='number' name='num2' id='num2' min='1' max='10' tmmvc-attribute='num2'><br><br>
+<input type='number' name='num3' id='num3' min='1' max='10' tmmvc-attribute='num3'><br><br>
+<input type='number' name='num4' id='num4' min='1' max='10' tmmvc-attribute='num4'><br><br>
+<input type='text' name='nm' id='nm' min='1' max='10' tmmvc-attribute='ci' tmmvc-bind-to='selectionStart'><br><br>
+<button type='button' onclick='doSomething()'>Factorial</button>
+<br>
+<br>
+Gender &nbsp;&nbsp;
+<input type='radio' id='male' name='gndr' value='M' tmmvc-attribute='gender' tmmvc-bind-to='value'>Male&nbsp;&nbsp;&nbsp;
+
+<input type='radio' id='trans' name='gndr' value='T' tmmvc-attribute='gender' tmmvc-bind-to='value'>Transgender&nbsp;&nbsp;&nbsp;
+
+<input type='radio' id='nb' name='gndr' value='nb' tmmvc-attribute='gender' tmmvc-bind-to='value'>Non-binary&nbsp;&nbsp;&nbsp;
+
+
+<input type='radio' id='female' name='gndr' value='F' tmmvc-attribute='gender' tmmvc-bind-to='value'>Female<br><br>
+
+<button type='button' onclick='getGender()'>Get gender</button>
+<br>
+<br>
+<br>
+
+City &nbsp;&nbsp;
+<input type='radio' id='Ujjain' name='city' value='Ujjain' tmmvc-attribute='city' tmmvc-bind-to='value'>Ujjain&nbsp;&nbsp;&nbsp;
+
+<input type='radio' id='Dewas' name='city' value='Dewas' tmmvc-attribute='city' tmmvc-bind-to='value'>Dewas&nbsp;&nbsp;&nbsp;
+
+<input type='radio' id='Bhopal' name='city' value='Bhopal' tmmvc-attribute='city' tmmvc-bind-to='value'>Bhopal&nbsp;&nbsp;&nbsp;
+
+
+<input type='radio' id='Indore' name='city' value='Indore' tmmvc-attribute='city' tmmvc-bind-to='value'>Indore<br><br>
+
+<button type='button' onclick='getCity()'>Get city</button>
+<br>
+<br>
+<br>
+
+State &nbsp;&nbsp;
+<input type='radio' id='MP' name='state' value='MP' tmmvc-attribute='state' tmmvc-bind-to='value'>MP&nbsp;&nbsp;&nbsp;
+
+<input type='radio' id='UP' name='state' value='UP' tmmvc-attribute='state' tmmvc-bind-to='value'>UP&nbsp;&nbsp;&nbsp;
+
+<input type='radio' id='Odisa' name='state' value='Odisa' tmmvc-attribute='state' tmmvc-bind-to='value'>Odisa&nbsp;&nbsp;&nbsp;
+
+
+<input type='radio' id='MH' name='state' value='MH' tmmvc-attribute='state' tmmvc-bind-to='value'>Maharashtra<br><br>
+
+<button type='button' onclick='getState()'>Get state</button>
+<br>
+<br>
+<br>
+
+Country&nbsp;&nbsp;
+<input type='radio' id='In' name='country' value='In' tmmvc-attribute='country' tmmvc-bind-to='value'>India&nbsp;&nbsp;&nbsp;
+
+
+<input type='radio' id='US' name='country' value='US' tmmvc-attribute='country' tmmvc-bind-to='value'>USA&nbsp;&nbsp;&nbsp;
+
+
+<input type='radio' id='UK' name='country' value='UK' tmmvc-attribute='country' tmmvc-bind-to='value'>UK<br><br>
+
+<button type='button' onclick='getCountry()'>Get country</button>
+<br>
+<br>
+<br>
+Is Indian <input type='checkbox' id='isIndian' name='isIndian' tmmvc-attribute='isIndian'><br><br>
+<button type='button' onclick='getIsIndian()'>Get is Indian</button>
+<br>
+<br>
+<br>
+<select id='cars' name='cars' tmmvc-attribute='car' tmmvc-bind-to='selectedIndex'>
+<option value='volvo'>Volvo</option>
+<option value='saab'>Saab</option>
+<option value='mercedes'>Mercedes</option>
+<option value='audi'>Audi</option>
+</select>
+<br>
+<br>
+<button type='button' onclick='getCar()'>Get car</button>
+<br>
+<br>
+<br>
+<h3>Choose subject</h3>
+<select id='subjects' name='subjects' multiple tmmvc-attribute='subjects' tmmvc-bind-to='value'>
+<option value='hindi'>Hindi</option>
+<option value='english'>English</option>
+<option value='math'>Math</option>
+<option value='physics'>Physics</option>
+<option value='chemistry'>Chemistry</option>
+</select>
+<br><br>
+<button type='button' onclick='getSubjects()'>Get subjects</button>
+<br>
+<br>
+<br>
+<h3>Address</h3>
+<textarea name='addr' id='addr' tmmvc-attribute='address'>
+
+</textarea>
+<br>
+<br>
+<button type='button' onclick='getAddress()'>Get address</button>
+
+
+
+</body>
+</html>

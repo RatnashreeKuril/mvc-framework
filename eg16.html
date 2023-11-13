@@ -1,0 +1,55 @@
+ <!doctype html>
+<html lang='en'>
+<head>
+<title>AJAX</title>
+<meta charset='utf-8'>
+<!-- Code written by Bobby starts here -->
+<script>
+var ds={
+"name" : "Ratna",
+"surname" : "Kuril",
+"age" : 23
+};
+function replaceContent(match)
+{
+//alert(match);
+var str=match.slice(2,-2);
+alert(str);
+if(str in ds && ds[str]!=null)
+{
+return ds[str];
+}
+return "";
+}
+function sam()
+{
+var element=document.body.innerHTML;
+var regex=/{{.*?}}/g;
+var newString=element.replace(regex,replaceContent);
+//alert("New String : "+newString);
+document.body.innerHTML=newString;
+}
+window.addEventListener('load',sam);
+</script>
+<!-- Code written by Bobby ends here -->
+
+<!-- Code written by Amit starts here -->
+<script>
+</script>
+<!-- Code written by Amit ends here -->
+
+</head>
+<body>
+<h1>Hello {{name}}</h1>
+How are you {{surname}}<br>
+Name <input type='text' value={{name}}><br>
+Surname <input type='text' value={{surname}}><br>
+Age <input type='number' max='100' min='0' value={{age}}><br>
+<span>
+<b>Name : </b>{{name}}<br>
+<b>Surname : </b>{{surname}}<br>
+<b>Age : </b>{{age}}<br>
+</span>
+<button type='button' onclick='sam()'>Get</button>
+</body>
+</html>

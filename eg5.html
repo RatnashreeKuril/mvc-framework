@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang='en'>
+<head>
+<title>AJAX</title>
+<meta charset='utf-8'>
+
+
+<!-- Code written by Bobby starts here -->
+<script>
+var ds={
+"gender" : "T",
+"city" : "Ujjain",
+"state" : "MP",
+"country" : "In"
+};
+function sam()
+{
+tmmvc.model=ds;
+}
+function getGender()
+{
+var gender=ds.gender;
+alert("Gender : "+gender);
+ds.gender='M';
+}
+
+function getCity()
+{
+var city=ds.city;
+alert("City : "+city);
+ds.city='Bhopal';
+}
+
+function getState()
+{
+var state=ds.state;
+alert("State: "+state);
+ds.state='UP';
+}
+
+function getCountry()
+{
+var country=ds.country;
+alert("Country: "+country);
+ds.country='US';
+}
+
+
+window.addEventListener('load',sam);
+</script>
+<!-- Code written by Bobby ends here -->
+
+
+
+
+
+<!-- Code written by Amit starts here -->
+<script>
+var tmmvc={
+"model" : null,
+};
+
+
+
+var radioButtons={};
+function loader()
+{
+var radioInputs=document.querySelectorAll("input[type='radio']");
+var radioInput;
+var name;
+var bindTo;
+for(var e=0;e<radioInputs.length;e++)
+{
+radioInput=radioInputs[e];
+if(radioInput.hasAttribute("tmmvc-attribute"))
+{
+bindTo=null;
+name=radioInput.getAttribute("tmmvc-attribute");
+if(radioButtons[name]==null) radioButtons[name]={};
+if(radioInput.hasAttribute("tmmvc-bind-to"))
+{
+bindTo=radioInput.getAttribute("tmmvc-bind-to");
+if(bindTo==null) bindTo="value";
+if(radioInput[bindTo]==null) throw "Invalid attribute : "+bindTo;
+}
+if(radioButtons[name].inputs==null) radioButtons[name].inputs=new Array();
+radioButtons[name].inputs[radioButtons[name].inputs.length]=radioInput;
+if(radioButtons[name].tmmvcAttributeName==null) radioButtons[name].tmmvcAttributeName=name;
+if(radioButtons[name].bindTo==null) radioButtons[name].bindTo=bindTo;
+if(radioInput[bindTo]==tmmvc.model[name]) 
+{
+radioInput.checked=true;
+radioButtons[name].currentValue=radioInput[bindTo];
+}
+radioInput.addEventListener("change",updateModel);
+radioInput.tmmvcAttributeName=name;
+radioInput.tmmvcBindTo=bindTo;
+}
+}
+
+setInterval(function(){
+updateView();
+},1000);
+
+} // loader ends here
+
+function updateModel()
+{
+// update model
+var name=this.tmmvcAttributeName;
+tmmvc.model[name]=this[this.tmmvcBindTo];
+radioButtons[name].currentValue=this[this.tmmvcBindTo];
+}
+function updateView()
+{
+var radioButton;
+var name;
+var newValue;
+var currentValue;
+var inputs;
+var input;
+for(k in radioButtons)
+{
+radioButton=radioButtons[k];
+name=radioButton.tmmvcAttributeName;
+currentValue=radioButton.currentValue;
+newValue=tmmvc.model[name];
+if(currentValue!=newValue)
+{
+// updateView
+inputs=radioButton.inputs;
+for(var e=0;e<inputs.length;e++)
+{
+input=inputs[e];
+input.checked=false;
+if(input[input.tmmvcBindTo]==newValue) input.checked=true;
+}
+currentValue=newValue;
+}
+}
+
+}
+window.addEventListener('load',loader);
+</script>
+<!-- Code written by Amit ends here -->
+
+
+
+</head>
+<body>
+Gender &nbsp;&nbsp;
+<input type='radio' id='male' name='gndr' value='M' tmmvc-attribute='gender' tmmvc-bind-to='value'>Male&nbsp;&nbsp;&nbsp;
+
+<input type='radio' id='trans' name='gndr' value='T' tmmvc-attribute='gender' tmmvc-bind-to='value'>Transgender&nbsp;&nbsp;&nbsp;
+
+<input type='radio' id='nb' name='gndr' value='nb' tmmvc-attribute='gender' tmmvc-bind-to='value'>Non-binary&nbsp;&nbsp;&nbsp;
+
+
+<input type='radio' id='female' name='gndr' value='F' tmmvc-attribute='gender' tmmvc-bind-to='value'>Female<br><br>
+
+<button type='button' onclick='getGender()'>Get gender</button>
+<br>
+<br>
+<br>
+
+City &nbsp;&nbsp;
+<input type='radio' id='Ujjain' name='city' value='Ujjain' tmmvc-attribute='city' tmmvc-bind-to='value'>Ujjain&nbsp;&nbsp;&nbsp;
+<input type='radio' id='Dewas' name='city' value='Dewas' tmmvc-attribute='city' tmmvc-bind-to='value'>Dewas&nbsp;&nbsp;&nbsp;
+<input type='radio' id='Bhopal' name='city' value='Bhopal' tmmvc-attribute='city' tmmvc-bind-to='value'>Bhopal&nbsp;&nbsp;&nbsp;
+<input type='radio' id='Indore' name='city' value='Indore' tmmvc-attribute='city' tmmvc-bind-to='value'>Indore<br><br>
+<button type='button' onclick='getCity()'>Get city</button>
+<br>
+<br>
+<br>
+State &nbsp;&nbsp;
+<input type='radio' id='MP' name='state' value='MP' tmmvc-attribute='state' tmmvc-bind-to='value'>MP&nbsp;&nbsp;&nbsp;
+<input type='radio' id='UP' name='state' value='UP' tmmvc-attribute='state' tmmvc-bind-to='value'>UP&nbsp;&nbsp;&nbsp;
+<input type='radio' id='Odisa' name='state' value='Odisa' tmmvc-attribute='state' tmmvc-bind-to='value'>Odisa&nbsp;&nbsp;&nbsp;
+<input type='radio' id='MH' name='state' value='MH' tmmvc-attribute='state' tmmvc-bind-to='value'>Maharashtra<br><br>
+<button type='button' onclick='getState()'>Get state</button>
+<br>
+<br>
+<br>
+Country&nbsp;&nbsp;
+<input type='radio' id='In' name='country' value='In' tmmvc-attribute='country' tmmvc-bind-to='value'>India&nbsp;&nbsp;&nbsp;
+<input type='radio' id='US' name='country' value='US' tmmvc-attribute='country' tmmvc-bind-to='value'>USA&nbsp;&nbsp;&nbsp;
+<input type='radio' id='UK' name='country' value='UK' tmmvc-attribute='country' tmmvc-bind-to='value'>UK<br><br>
+<button type='button' onclick='getCountry()'>Get country</button>
+</body>
+</html>

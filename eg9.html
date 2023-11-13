@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang='en'>
+<head>
+<title>AJAX</title>
+<meta charset='utf-8'>
+
+
+<!-- Code written by Bobby starts here -->
+<script>
+var ds={
+"cars" : ["mercedes","saab"]
+};
+function sam()
+{
+tmmvc.model=ds;
+}
+function getCars()
+{
+var cars=ds.cars;
+for(var e=0;e<cars.length;e++)
+{
+alert("Cars : "+cars[e]);
+}
+ds.cars=["saab"];
+for(var e=0;e<9;e++);
+cars=ds.cars;
+for(var e=0;e<cars.length;e++)
+{
+alert("Cars : "+cars[e]);
+}
+
+//ds.cars=["saab","audi","mercedes"];
+}
+
+
+window.addEventListener('load',sam);
+</script>
+<!-- Code written by Bobby ends here -->
+
+<!-- Code written by Amit starts here -->
+<script>
+var tmmvc={
+"model" : null
+};
+var comboBoxCollection=null;
+function loader()
+{
+comboBoxCollection=document.querySelectorAll("select[tmmvc-attribute]");
+var options;
+var comboBox;
+var values;
+var value;
+for(var e=0;e<comboBoxCollection.length;e++)
+{
+comboBox=comboBoxCollection[e];
+
+options=comboBox.children;
+name=comboBox.getAttribute("tmmvc-attribute");
+if(!(tmmvc.model[name])) throw name+" not found in model";
+values=tmmvc.model[name];
+for(var i=0;i<values.length;i++)
+{
+value=values[i];
+
+for(var e=0;e<options.length;e++)
+{
+option=options[e];
+if(option.value==value)
+{
+option.selected=true;
+}
+}
+
+}
+
+
+
+comboBox.addEventListener("change",updateModelForComboBox);
+comboBox.tmmvcAttributeName=name;
+comboBox.currentValues=tmmvc.model[name];
+
+
+}
+
+setInterval(function(){
+updateView();
+},1000);
+}
+
+function updateModelForComboBox()
+{
+
+var selectedOptions=this.selectedOptions;
+var values=[];
+for(var e=0;e<selectedOptions.length;e++)
+{
+values[values.length]=selectedOptions[e].value;
+}
+tmmvc.model[this.tmmvcAttributeName]=values;
+this.currentValues=values;
+}
+function updateView()
+{
+var comboBox;
+var newValues;
+var name;
+var newValue;
+var currentValues;
+var options;
+var option;
+var valuesChanged;
+for(var e=0;e<comboBoxCollection.length;e++)
+{
+valuesChanged=false;
+comboBox=comboBoxCollection[e];
+name=comboBox.tmmvcAttributeName;
+currentValues=comboBox.currentValues;
+newValues=tmmvc.model[name];
+if(currentValues.length!=newValues.length) valuesChanged=true;
+else
+{
+for(var i=0;i<newValues.length;i++)
+{
+newValue=newValues[i];
+//alert("New value : "+newValue);
+//alert("Current values : "+currentValues);
+if(currentValues.includes(newValue)==false)
+{
+valuesChanged=true;
+break;
+}
+}
+}
+if(valuesChanged)
+{
+options=comboBox.options;
+comboBox.selectedOptions=[];
+for(var i=0;i<options.length;i++)
+{
+option=options[i];
+value=option.value;
+option.selected=false;
+if(newValues.includes(value))
+{
+option.selected=true;
+comboBox.selectedOptions[comboBox.selectedOptions.length]=option;
+}
+}
+comboBox.currentValues=newValues;
+
+} // values changed
+}
+}
+
+
+
+window.addEventListener('load',loader);
+</script>
+<!-- Code written by Amit ends here -->
+
+
+
+
+</head>
+<body>
+<h3>Choose cars</h3>
+<select id='cars' name='cars' multiple tmmvc-attribute='cars'>
+<option value='volvo'>Volvo</option>
+<option value='saab'>Saab</option>
+<option value='mercedes'>Mercedes</option>
+<option value='audi'>Audi</option>
+</select>
+<br><br>
+<button type='button' onclick='getCars()'>Get cars</button>
+</body>
+</html>

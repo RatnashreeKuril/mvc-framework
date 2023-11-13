@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang='en'>
+<head>
+<title>AJAX</title>
+<meta charset='utf-8'>
+
+
+<!-- Code written by Bobby starts here -->
+<script>
+var ds={
+"gender" : "T"
+};
+function sam()
+{
+tmmvc.model=ds;
+}
+function getGender()
+{
+var gender=ds.gender;
+alert("Gender : "+gender);
+ds.gender='M';
+}
+
+
+window.addEventListener('load',sam);
+</script>
+<!-- Code written by Bobby ends here -->
+
+
+
+
+
+<!-- Code written by Amit starts here -->
+<script>
+var tmmvc={
+"model" : null,
+};
+var currentValue=null;
+function loader()
+{
+var radioInputs=document.querySelectorAll("input[tmmvc-attribute='gender']");
+var radioInput;
+var value=tmmvc.model["gender"];
+currentValue=value;
+var isValueSet=false;
+for(var e=0;e<radioInputs.length;e++)
+{
+radioInput=radioInputs[e];
+if(radioInput.value==value && isValueSet==false)
+{
+radioInput.checked=true;
+isValueSet=true;
+}
+
+radioInput.addEventListener("change",updateModel);
+radioInput.modelAttributeName="gender";
+}
+
+setInterval(function(){
+updateView();
+},1000);
+
+
+} // loader ends here
+
+function updateModel()
+{
+// update model
+//alert("Update Model got called");
+tmmvc.model[this.modelAttributeName]=this.value;
+currentValue=this.value;
+}
+
+function updateView()
+{
+var newValue=tmmvc.model["gender"];
+if(currentValue==newValue) return;
+var radioInputs=document.querySelectorAll("input[tmmvc-attribute='gender']");
+var radioInput;
+var isValueSet=false;
+for(var e=0;e<radioInputs.length;e++)
+{
+radioInput=radioInputs[e];
+radioInput.checked=false;
+if(isValueSet==false && radioInput.value==newValue)
+{
+radioInput.checked=true;
+isValueSet=true;
+}
+}
+currentValue=newValue;
+}
+
+
+window.addEventListener('load',loader);
+</script>
+<!-- Code written by Amit ends here -->
+
+
+
+</head>
+<body>
+Gender
+<input type='radio' id='male' name='gndr' value='M' tmmvc-attribute='gender' tmmvc-bind-to='value'>Male&nbsp;&nbsp;&nbsp;
+
+<input type='radio' id='trans' name='gndr' value='T' tmmvc-attribute='gender' tmmvc-bind-to='value'>Transgender&nbsp;&nbsp;&nbsp;
+
+<input type='radio' id='nb' name='gndr' value='nb' tmmvc-attribute='gender' tmmvc-bind-to='value'>Non-binary&nbsp;&nbsp;&nbsp;
+
+
+<input type='radio' id='female' name='gndr' value='F' tmmvc-attribute='gender' tmmvc-bind-to='value'>Female<br><br>
+
+<button type='button' onclick='getGender()'>Get gender</button>
+
+
+
+
+</body>
+</html>

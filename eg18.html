@@ -1,0 +1,149 @@
+ <!doctype html>
+<html lang='en'>
+<head>
+<title>AJAX</title>
+<meta charset='utf-8'>
+<!-- Code written by Bobby starts here -->
+<script>
+var ds={
+"firstName" : "Ratna",
+"lastName" : "Kuril",
+"age" : 10,
+"course" : [
+["c","webapps"],
+["C++","Learn"],
+["Java","Program"],
+["Javascript","Opps"]
+],
+"info" : {
+"name" : "teena",
+"gender" : "female",
+"age" : 26
+}
+};
+function sam() 
+{
+tmmvc.model=ds;
+}
+function doSomething()
+{
+alert("doSomething got called");
+alert(ds.age);
+ds.age=23;
+alert(tmmvc.model.age);
+alert(ds.age);
+ds.firstName="Bittu";
+ds.lastName="Sharma";
+ds.course[0][1]="AngularJS";
+ds.info.name="Pooja"
+}
+window.addEventListener('load',sam);
+</script>
+<!-- Code written by Bobby ends here -->
+
+<!-- Code written by Amit starts here -->
+<script>
+
+var tmmvc={
+"model" : {}
+};
+var valuesMap={
+};
+
+
+function replaceContent(match)
+{
+//alert(match);
+var str=match.slice(2,-2);
+if(str.length==0 || str==null) return "";
+var m=str.match(/^(\w+)\[.*\]/);
+var x=str.indexOf(".");
+var result=eval("tmmvc.model."+str);
+if(x!=-1)
+{
+var objName=str.substring(0,x);
+//alert("Type of "+objName+" is : "+(typeof tmmvc.model[objName]));
+if((typeof tmmvc.model[objName])=='object')
+{
+if(!(valuesMap[objName])) valuesMap[objName]=tmmvc.model[objName];
+}
+}
+else if(m!=null && Array.isArray(tmmvc.model[m[1]])) 
+{
+valuesMap[m[1]]=tmmvc.model[m[1]];
+}
+else
+{
+valuesMap[str]=tmmvc.model[str];
+}
+//alert(result);
+if(result!=null)
+{
+return result;
+}
+return "";
+}
+var actualContent;
+function loader()
+{
+actualContent=document.body.innerHTML;
+searchContent();
+setInterval(function(){
+if(isValuesChanged())
+{
+alert("values changed");
+searchContent();
+}
+},3000);
+}
+function searchContent()
+{
+var regex=/{{.*?}}/g;
+var newString=actualContent.replace(regex,replaceContent);
+//alert("New String : "+newString);
+document.body.innerHTML=newString;
+/*
+for(k in valuesMap)
+{
+alert("Key : "+k);
+alert("value : "+valuesMap[k]);
+}
+*/
+}
+function isValuesChanged()
+{
+alert("isValuesChanged got called");
+for(key in valuesMap)
+{
+if(tmmvc.model[key]!=valuesMap[key]) return true;
+}
+return false;
+}
+window.addEventListener('load',loader);
+
+</script>
+<!-- Code written by Amit ends here -->
+
+</head>
+<body>
+<h1>Hello {{firstName}}</h1>
+How are you {{lastName}}<br>
+Name <input type='text' name='firstName' id='firstName' value={{firstName}}><br>
+Surname <input type='text' name='lastName' id='lastName' value={{lastName}}><br>
+Age <input type='number' name='age' id='age' max='100' min='0' value={{age}}><br>
+<h3>Select Course</h3>
+<select>
+<option>{{course[0][1]}}</option>
+<option>{{course[1][0]}}</option>
+<option>{{course[2][1]}}</option>
+<option>{{course[3][0]}}</option>
+</select><br><br>
+<h3></h3>
+<span>
+<b>Name : </b>{{info.name}}<br>
+<b>Surname : </b>{{info.gender}}{{}}<br>
+<b>Age : </b>{{info.age}}<br>
+</span>
+<button type='button' onclick='doSomething()'>Get</button>
+</body>
+</html>
